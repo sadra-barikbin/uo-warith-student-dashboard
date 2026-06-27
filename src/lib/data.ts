@@ -117,6 +117,23 @@ export const schedule: ScheduleDay[] = [
   ] },
 ];
 
+export interface TranscriptTerm {
+  term: string;
+  label: string;
+  gpa: number;
+  credits: number;
+  status: string;
+}
+
+export const transcript: TranscriptTerm[] = [
+  { term: "خ23", label: "الفصل الأول 2023", gpa: 3.4, credits: 14, status: "مكتمل" },
+  { term: "ر24", label: "الفصل الثاني 2024", gpa: 3.55, credits: 16, status: "مكتمل" },
+  { term: "خ24", label: "الفصل الأول 2024", gpa: 3.62, credits: 18, status: "مكتمل" },
+  { term: "ر25", label: "الفصل الثاني 2025", gpa: 3.7, credits: 18, status: "مكتمل" },
+  { term: "خ25", label: "الفصل الأول 2025", gpa: 3.74, credits: 18, status: "مكتمل" },
+  { term: "ر26", label: "الفصل الثاني 2026", gpa: 3.78, credits: 17, status: "قيد الدراسة" },
+];
+
 export const rankInfo = {
   rank: 7,
   cohortSize: 142,
