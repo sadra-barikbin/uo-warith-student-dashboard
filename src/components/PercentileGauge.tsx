@@ -1,11 +1,26 @@
-import { rankInfo } from "@/lib/data";
+"use client";
+
+import { useApi } from "@/lib/useApi";
 
 const R = 64;
 const C = 2 * Math.PI * R;
 
 export type RankDisplay = "exact" | "percentile" | "both";
 
+interface StudentData {
+  rankInfo: {
+    rank: number;
+    cohortSize: number;
+    percentile: number;
+    cohortAvgGpa: number;
+    studentGpa: number;
+  };
+}
+
 export function PercentileGauge({ rankDisplay = "both" }: { rankDisplay?: RankDisplay }) {
+  const { data } = useApi<StudentData>("/api/student");
+  if (!data) return <div style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 260 }} />;
+  const { rankInfo } = data;
   const fraction = rankInfo.percentile / 100;
   const dash = `${(fraction * C).toFixed(1)} ${C.toFixed(1)}`;
   const rankBig = rankDisplay === "percentile" ? "5%" : `#${rankInfo.rank}`;

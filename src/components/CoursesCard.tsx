@@ -1,9 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { coursesCurrent, coursesPast, gradeBand, termMeta } from "@/lib/data";
+import { gradeBand, type Course } from "@/lib/data";
+import { useApi } from "@/lib/useApi";
 
 type Term = "current" | "past";
+
+interface CoursesData {
+  term: Term;
+  courses: Course[];
+  meta: { gpa: string; sub: string; credits: string };
+}
 
 const bandTokens: Record<string, { color: string; bg: string }> = {
   pos: { color: "var(--pos)", bg: "var(--pos-bg)" },
@@ -29,8 +36,12 @@ function tabStyle(active: boolean): React.CSSProperties {
 
 export function CoursesCard() {
   const [term, setTerm] = useState<Term>("current");
-  const courses = term === "current" ? coursesCurrent : coursesPast;
-  const meta = termMeta[term];
+  const { data } = useApi<CoursesData>(`/api/courses?term=${term}`);
+
+  if (!data) {
+    return <div style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 360 }} />;
+  }
+  const { courses, meta } = data;
 
   return (
     <div style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", padding: 22 }}>

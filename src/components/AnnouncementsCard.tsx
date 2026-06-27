@@ -9,14 +9,12 @@ const tagTokens: Record<string, { color: string; bg: string }> = {
 
 export function AnnouncementsCard({
   announcements,
-  readIds,
   onMarkRead,
 }: {
-  announcements: Announcement[];
-  readIds: string[];
+  announcements: (Announcement & { unread: boolean })[];
   onMarkRead: (id: string) => void;
 }) {
-  const unread = announcements.filter((a) => !readIds.includes(a.id)).length;
+  const unread = announcements.filter((a) => a.unread).length;
 
   return (
     <section>
@@ -26,7 +24,6 @@ export function AnnouncementsCard({
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))", gap: 14 }}>
         {announcements.map((a) => {
-          const isUnread = !readIds.includes(a.id);
           const token = tagTokens[a.key];
           return (
             <div
@@ -46,7 +43,7 @@ export function AnnouncementsCard({
                 <span style={{ fontSize: 10.5, fontWeight: 600, color: token.color, background: token.bg, padding: "3px 9px", borderRadius: 6 }}>
                   {a.tag}
                 </span>
-                {isUnread && <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--accent)" }} />}
+                {a.unread && <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--accent)" }} />}
               </div>
               <div style={{ fontSize: 13.5, fontWeight: 500, lineHeight: 1.6 }}>{a.title}</div>
               <div style={{ fontSize: 11.5, color: "var(--muted)", marginTop: 10 }}>{a.time}</div>

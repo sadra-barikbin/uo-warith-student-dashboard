@@ -11,14 +11,22 @@ import { CoursesCard } from "@/components/CoursesCard";
 import { GradeDistributionCard } from "@/components/GradeDistributionCard";
 import { WeeklySchedule } from "@/components/WeeklySchedule";
 import { AnnouncementsCard } from "@/components/AnnouncementsCard";
-import { announcements } from "@/lib/data";
+import { useApi } from "@/lib/useApi";
+import type { Announcement } from "@/lib/data";
+
+interface AnnouncementsData {
+  announcements: (Announcement & { unread: boolean })[];
+  unread: number;
+}
 
 export default function OverviewPage() {
-  const [readIds, setReadIds] = useState<string[]>([]);
-  const unread = announcements.filter((a) => !readIds.includes(a.id)).length;
+  const { data, setData } = useAnnouncements();
 
-  const markRead = (id: string) => {
-    setReadIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+  const markRead = async (id: string) => {
+    const res = await fetch(`/api/announcements/${id}/read`, { method: "POST" });
+    if (!res.ok) return;
+    const updated: AnnouncementsData = await res.json();
+    setData(updated);
   };
 
   return (
@@ -36,7 +44,7 @@ export default function OverviewPage() {
           animation: "dashIn .4s ease both",
         }}
       >
-        <Topbar title="نظرة عامة" dateLine="الجمعة، 27 حزيران · الفصل الثاني 2026" unread={unread} />
+        <Topbar title="نظرة عامة" dateLine="الجمعة، 27 حزيران · الفصل الثاني 2026" unread={data?.unread ?? 0} />
         <Hero />
         <AIAdvisorCard />
 
@@ -52,8 +60,14 @@ export default function OverviewPage() {
 
         <WeeklySchedule />
 
-        <AnnouncementsCard announcements={announcements} readIds={readIds} onMarkRead={markRead} />
+        {data && <AnnouncementsCard announcements={data.announcements} onMarkRead={markRead} />}
       </main>
     </div>
   );
+}
+
+function useAnnouncements() {
+  const { data: fetched } = useApi<AnnouncementsData>("/api/announcements");
+  const [override, setOverride] = useState<AnnouncementsData | null>(null);
+  return { data: override ?? fetched, setData: setOverride };
 }

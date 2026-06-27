@@ -1,5 +1,21 @@
-import { academicStanding, rankInfo, student } from "@/lib/data";
+"use client";
+
+import { useApi } from "@/lib/useApi";
 import { ChevronUpTrendIcon } from "./icons";
+
+interface StudentData {
+  student: { firstName: string };
+  rankInfo: { rank: number; cohortSize: number };
+  academicStanding: {
+    cumulativeGpa: number;
+    prevGpa: number;
+    delta: number;
+    creditsEarned: number;
+    creditsTotal: number;
+    status: string;
+    statusSub: string;
+  };
+}
 
 const cardBase: React.CSSProperties = {
   borderRadius: 16,
@@ -10,6 +26,9 @@ const cardBase: React.CSSProperties = {
 };
 
 export function Hero() {
+  const { data } = useApi<StudentData>("/api/student");
+  if (!data) return <section data-hero style={{ minHeight: 168 }} />;
+  const { student, rankInfo, academicStanding } = data;
   return (
     <section data-hero style={{ display: "flex", gap: 20, alignItems: "stretch" }}>
       <div
