@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+:root,
+[data-theme="dark"] {
+  --bg: #071529;
+  --surface: #0f274d;
+  --surface-2: #0b1d38;
+  --sidebar-bg: rgba(5, 16, 33, 0.5);
+  --av-1: #2a4d82;
+  --av-2: #173058;
+  --text: #e8eefa;
+  --text-strong: #f1f6ff;
+  --text-2: #ccd9ee;
+  --text-3: #bbc9e2;
+  --muted: #6e809f;
+  --muted-s: #97a8c6;
+  --faint: #566a8c;
+  --on-tint: #d2e2fb;
+  --accent-label: #a8c6ee;
+  --bd: rgba(255, 255, 255, 0.06);
+  --bd-2: rgba(255, 255, 255, 0.05);
+  --bd-3: rgba(255, 255, 255, 0.08);
+  --ov: rgba(255, 255, 255, 0.02);
+  --ov-s: rgba(255, 255, 255, 0.015);
+  --ov-2: rgba(255, 255, 255, 0.025);
+  --ov-3: rgba(255, 255, 255, 0.03);
+  --track: rgba(255, 255, 255, 0.07);
+  --bar-bg: rgba(255, 255, 255, 0.1);
+  --hero-ov: rgba(255, 255, 255, 0.01);
+  --accent: #4a90f7;
+  --accent-12: rgba(74, 144, 247, 0.13);
+  --accent-22: rgba(74, 144, 247, 0.24);
+  --accent-glow: rgba(74, 144, 247, 0.08);
+  --accent-shadow: rgba(74, 144, 247, 0.3);
+  --accent2: #f4b81c;
+  --pos: #34d399;
+  --pos-bg: rgba(52, 211, 153, 0.14);
+  --pos-soft: rgba(52, 211, 153, 0.16);
+  --info: #5ea0fb;
+  --info-bg: rgba(94, 160, 251, 0.14);
+  --warn: #f4b81c;
+  --warn-bg: rgba(244, 184, 28, 0.15);
+  --neg: #fb7185;
+  --neg-bg: rgba(251, 113, 133, 0.14);
+  --alt: #c79a3a;
+  --alt-bg: rgba(199, 154, 58, 0.16);
+  --on-accent: #06142b;
+  --card-shadow: none;
+  --logo: url(/uowa-logo.svg);
+}
+
+[data-theme="light"] {
+  --bg: #eef3fb;
+  --surface: #ffffff;
+  --surface-2: #f4f8ff;
+  --sidebar-bg: rgba(255, 255, 255, 0.78);
+  --av-1: #2f6fd1;
+  --av-2: #1a4ea0;
+  --text: #16263f;
+  --text-strong: #0e1c33;
+  --text-2: #33455f;
+  --text-3: #45566f;
+  --muted: #79889f;
+  --muted-s: #5d6d86;
+  --faint: #a7b3c7;
+  --on-tint: #eaf2ff;
+  --accent-label: #1a56c2;
+  --bd: rgba(20, 50, 110, 0.1);
+  --bd-2: rgba(20, 50, 110, 0.08);
+  --bd-3: rgba(20, 50, 110, 0.13);
+  --ov: rgba(20, 50, 110, 0.03);
+  --ov-s: rgba(20, 50, 110, 0.025);
+  --ov-2: rgba(20, 50, 110, 0.04);
+  --ov-3: rgba(20, 50, 110, 0.05);
+  --track: rgba(20, 50, 110, 0.1);
+  --bar-bg: rgba(20, 50, 110, 0.16);
+  --hero-ov: rgba(20, 50, 110, 0.02);
+  --accent: #1657cc;
+  --accent-12: rgba(22, 87, 204, 0.12);
+  --accent-22: rgba(22, 87, 204, 0.24);
+  --accent-glow: rgba(22, 87, 204, 0.1);
+  --accent-shadow: rgba(22, 87, 204, 0.32);
+  --accent2: #e0a008;
+  --pos: #2e9d5b;
+  --pos-bg: rgba(46, 157, 91, 0.15);
+  --pos-soft: rgba(46, 157, 91, 0.2);
+  --info: #2f72c8;
+  --info-bg: rgba(47, 114, 200, 0.15);
+  --warn: #c2870a;
+  --warn-bg: rgba(224, 160, 8, 0.18);
+  --neg: #d2493f;
+  --neg-bg: rgba(210, 73, 63, 0.15);
+  --alt: #a47a16;
+  --alt-bg: rgba(164, 122, 22, 0.16);
+  --on-accent: #ffffff;
+  --card-shadow: 0 1px 2px rgba(20, 40, 80, 0.05), 0 16px 32px -18px rgba(20, 40, 80, 0.22);
+  --av-1: #2f6fd1;
+  --av-2: #1a4ea0;
+  --logo: url(/uowa-logo-dark.svg);
+}
+
+body {
+  background: radial-gradient(1200px 600px at 20% -10%, var(--accent-glow), transparent 60%), var(--bg);
+  color: var(--text);
+  font-family: var(--font-plex-arabic), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s, color 0.3s;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bd-3);
+  border-radius: 9px;
+}
+
+@keyframes dashIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes orbFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 1080px) {
+  [data-grid] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 860px) {
+  [data-sidebar] {
+    display: none !important;
+  }
+  [data-main] {
+    padding: 18px !important;
+  }
+  [data-stats] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  [data-hero] {
+    flex-direction: column !important;
+  }
+}
+
+@media (max-width: 520px) {
+  [data-stats] {
+    grid-template-columns: 1fr !important;
+  }
+}
