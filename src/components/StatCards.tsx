@@ -1,7 +1,9 @@
 "use client";
 
-import { useApi } from "@/lib/useApi";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
 import { ChevronUpTrendIcon } from "./icons";
+import { Skeleton } from "./Skeleton";
 
 export interface StudentData {
   student: { firstName: string };
@@ -26,8 +28,19 @@ const cardBase: React.CSSProperties = {
 };
 
 export function StatCards() {
-  const { data } = useApi<StudentData>("/api/student");
-  if (!data) return <div data-stats style={{ minHeight: 168 }} />;
+  const { data } = useSWR<StudentData>("/api/student", fetcher);
+  if (!data)
+    return (
+      <div data-stats style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} style={{ ...cardBase, display: "flex", flexDirection: "column", gap: 10 }}>
+            <Skeleton style={{ width: "55%", height: 11 }} />
+            <Skeleton style={{ width: "70%", height: 28 }} />
+            <Skeleton style={{ width: "85%", height: 11 }} />
+          </div>
+        ))}
+      </div>
+    );
   const { rankInfo, academicStanding } = data;
 
   return (

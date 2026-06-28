@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { gradeBand, type Course } from "@/lib/data";
-import { useApi } from "@/lib/useApi";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import { CardSkeleton, Skeleton } from "./Skeleton";
 
 type Term = "current" | "past";
 
@@ -36,10 +38,20 @@ function tabStyle(active: boolean): React.CSSProperties {
 
 export function CoursesCard() {
   const [term, setTerm] = useState<Term>("current");
-  const { data } = useApi<CoursesData>(`/api/courses?term=${term}`);
+  const { data } = useSWR<CoursesData>(`/api/courses?term=${term}`, fetcher);
 
   if (!data) {
-    return <div style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 360 }} />;
+    return (
+      <CardSkeleton minHeight={360}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Skeleton style={{ width: "45%", height: 14 }} />
+          <Skeleton style={{ width: 180, height: 32 }} />
+        </div>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} style={{ width: "100%", height: 48 }} />
+        ))}
+      </CardSkeleton>
+    );
   }
   const { courses, meta } = data;
 

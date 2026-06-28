@@ -10,7 +10,54 @@ body {
   padding: 0;
 }
 
-:root,
+:root {
+  --bg: #eef3fb;
+  --surface: #ffffff;
+  --surface-2: #f4f8ff;
+  --sidebar-bg: rgba(255, 255, 255, 0.78);
+  --av-1: #2f6fd1;
+  --av-2: #1a4ea0;
+  --text: #16263f;
+  --text-strong: #0e1c33;
+  --text-2: #33455f;
+  --text-3: #45566f;
+  --muted: #79889f;
+  --muted-s: #5d6d86;
+  --faint: #a7b3c7;
+  --on-tint: #eaf2ff;
+  --accent-label: #1a56c2;
+  --bd: rgba(20, 50, 110, 0.1);
+  --bd-2: rgba(20, 50, 110, 0.08);
+  --bd-3: rgba(20, 50, 110, 0.13);
+  --ov: rgba(20, 50, 110, 0.03);
+  --ov-s: rgba(20, 50, 110, 0.025);
+  --ov-2: rgba(20, 50, 110, 0.04);
+  --ov-3: rgba(20, 50, 110, 0.05);
+  --track: rgba(20, 50, 110, 0.1);
+  --bar-bg: rgba(20, 50, 110, 0.16);
+  --hero-ov: rgba(20, 50, 110, 0.02);
+  --accent: #1657cc;
+  --accent-12: rgba(22, 87, 204, 0.12);
+  --accent-22: rgba(22, 87, 204, 0.24);
+  --accent-glow: rgba(22, 87, 204, 0.1);
+  --accent-shadow: rgba(22, 87, 204, 0.32);
+  --accent2: #e0a008;
+  --pos: #2e9d5b;
+  --pos-bg: rgba(46, 157, 91, 0.15);
+  --pos-soft: rgba(46, 157, 91, 0.2);
+  --info: #2f72c8;
+  --info-bg: rgba(47, 114, 200, 0.15);
+  --warn: #c2870a;
+  --warn-bg: rgba(224, 160, 8, 0.18);
+  --neg: #d2493f;
+  --neg-bg: rgba(210, 73, 63, 0.15);
+  --alt: #a47a16;
+  --alt-bg: rgba(164, 122, 22, 0.16);
+  --on-accent: #ffffff;
+  --card-shadow: 0 1px 2px rgba(20, 40, 80, 0.05), 0 16px 32px -18px rgba(20, 40, 80, 0.22);
+  --logo: url(/uowa-logo-dark.svg);
+}
+
 [data-theme="dark"] {
   --bg: #071529;
   --surface: #0f274d;
@@ -137,6 +184,22 @@ body {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+[data-skeleton] {
+  background: linear-gradient(90deg, var(--ov-2) 25%, var(--ov-3) 50%, var(--ov-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: 8px;
+}
+
 @keyframes orbFloat {
   0%,
   100% {
@@ -161,9 +224,40 @@ body {
   }
 }
 
+[data-menu-btn] {
+  display: none;
+}
+
+[data-sidebar-backdrop] {
+  display: none;
+}
+
 @media (max-width: 860px) {
+  [data-menu-btn] {
+    display: flex;
+  }
   [data-sidebar] {
-    display: none !important;
+    display: none;
+    position: fixed !important;
+    inset-inline-start: 0;
+    top: 0;
+    z-index: 50;
+    box-shadow: var(--card-shadow);
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+  [dir="rtl"] [data-sidebar] {
+    transform: translateX(100%);
+  }
+  [data-sidebar][data-open="true"] {
+    display: flex !important;
+    transform: translateX(0);
+  }
+  [data-sidebar-backdrop] {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 40;
   }
   [data-main] {
     padding: 18px !important;

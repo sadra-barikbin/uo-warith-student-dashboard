@@ -1,6 +1,8 @@
 "use client";
 
-import { useApi } from "@/lib/useApi";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import { CardSkeleton, Skeleton } from "./Skeleton";
 
 const R = 64;
 const C = 2 * Math.PI * R;
@@ -18,8 +20,18 @@ interface StudentData {
 }
 
 export function PercentileGauge({ rankDisplay = "both" }: { rankDisplay?: RankDisplay }) {
-  const { data } = useApi<StudentData>("/api/student");
-  if (!data) return <div style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 260 }} />;
+  const { data } = useSWR<StudentData>("/api/student", fetcher);
+  if (!data)
+    return (
+      <CardSkeleton minHeight={260}>
+        <Skeleton style={{ width: "50%", height: 14 }} />
+        <Skeleton style={{ width: "75%", height: 11 }} />
+        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Skeleton style={{ width: 170, height: 170, borderRadius: "50%" }} />
+        </div>
+        <Skeleton style={{ width: "100%", height: 32 }} />
+      </CardSkeleton>
+    );
   const { rankInfo } = data;
   const fraction = rankInfo.percentile / 100;
   const dash = `${(fraction * C).toFixed(1)} ${C.toFixed(1)}`;
