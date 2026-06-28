@@ -3,7 +3,6 @@
 import useSWR from "swr";
 import type { ScheduleDay } from "@/lib/data";
 import { fetcher } from "@/lib/fetcher";
-import { ArrowLeftIcon } from "./icons";
 import { CardSkeleton, Skeleton } from "./Skeleton";
 
 interface ScheduleData {
@@ -34,27 +33,9 @@ export function WeeklySchedule() {
   const { schedule } = data;
   return (
     <section style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", padding: 22 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-        <div>
-          <div style={{ fontWeight: 700, fontSize: 16 }}>الجدول الأسبوعي</div>
-          <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 3 }}>الفصل الثاني 2026 · المحاضرات والمختبرات</div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 7,
-            fontSize: 12,
-            color: "var(--muted-s)",
-            border: "1px solid var(--bd-3)",
-            padding: "6px 11px",
-            borderRadius: 8,
-            cursor: "pointer",
-          }}
-        >
-          الامتحانات النهائية
-          <ArrowLeftIcon />
-        </div>
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontWeight: 700, fontSize: 16 }}>الجدول الأسبوعي</div>
+        <div style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 3 }}>الفصل الثاني 2026 · المحاضرات والمختبرات</div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 12 }}>
         {schedule.map((d) => (
