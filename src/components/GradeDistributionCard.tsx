@@ -1,14 +1,27 @@
 "use client";
 
-import { useApi } from "@/lib/useApi";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import { CardSkeleton, Skeleton } from "./Skeleton";
 
 interface GradeDistributionData {
   distribution: { label: string; count: number; you?: boolean }[];
 }
 
 export function GradeDistributionCard() {
-  const { data } = useApi<GradeDistributionData>("/api/grade-distribution");
-  if (!data) return <div style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 260 }} />;
+  const { data } = useSWR<GradeDistributionData>("/api/grade-distribution", fetcher);
+  if (!data)
+    return (
+      <CardSkeleton minHeight={260}>
+        <Skeleton style={{ width: "55%", height: 14 }} />
+        <Skeleton style={{ width: "75%", height: 11 }} />
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 5, height: 150, marginTop: 10 }}>
+          {[40, 70, 100, 65, 35, 50].map((h, i) => (
+            <Skeleton key={i} style={{ flex: 1, height: `${h}%` }} />
+          ))}
+        </div>
+      </CardSkeleton>
+    );
   const gradeDistribution = data.distribution;
   const maxN = Math.max(...gradeDistribution.map((d) => d.count));
   const bars = gradeDistribution.map((d) => ({

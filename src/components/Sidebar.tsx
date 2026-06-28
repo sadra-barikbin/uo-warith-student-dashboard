@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { student } from "@/lib/data";
 import { GridIcon, ChartIcon, BookIcon, CalendarIcon, AwardIcon, DocumentIcon } from "./icons";
+import { useSidebar } from "./SidebarProvider";
 
 const NAV_ITEMS = [
   { key: "overview", href: "/", label: "نظرة عامة", Icon: GridIcon },
@@ -16,24 +17,32 @@ const NAV_ITEMS = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { open, close } = useSidebar();
 
   return (
-    <aside
-      data-sidebar
-      style={{
-        width: 256,
-        flexShrink: 0,
-        borderLeft: "1px solid var(--bd)",
-        padding: "24px 18px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 28,
-        position: "sticky",
-        top: 0,
-        height: "100vh",
-        background: "var(--sidebar-bg)",
-      }}
-    >
+    <>
+      <div
+        data-sidebar-backdrop
+        onClick={close}
+        style={{ display: open ? "block" : "none" }}
+      />
+      <aside
+        data-sidebar
+        data-open={open}
+        style={{
+          width: 256,
+          flexShrink: 0,
+          borderLeft: "1px solid var(--bd)",
+          padding: "24px 18px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 28,
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          background: "var(--sidebar-bg)",
+        }}
+      >
       <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
         <div
           style={{
@@ -67,6 +76,7 @@ export function Sidebar() {
             <Link
               key={key}
               href={href}
+              onClick={close}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -144,6 +154,7 @@ export function Sidebar() {
           </div>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

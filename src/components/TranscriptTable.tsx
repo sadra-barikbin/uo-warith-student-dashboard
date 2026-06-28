@@ -1,18 +1,28 @@
 "use client";
 
+import useSWR from "swr";
 import type { TranscriptTerm } from "@/lib/data";
-import { useApi } from "@/lib/useApi";
+import { fetcher } from "@/lib/fetcher";
+import { CardSkeleton, Skeleton } from "./Skeleton";
 
 interface TranscriptData {
   transcript: TranscriptTerm[];
 }
 
 export function TranscriptTable() {
-  const { data } = useApi<TranscriptData>("/api/transcript");
+  const { data } = useSWR<TranscriptData>("/api/transcript", fetcher);
 
   if (!data) {
     return (
-      <div style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 300 }} />
+      <CardSkeleton minHeight={300}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Skeleton style={{ width: "35%", height: 14 }} />
+          <Skeleton style={{ width: 90, height: 11 }} />
+        </div>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} style={{ width: "100%", height: 44 }} />
+        ))}
+      </CardSkeleton>
     );
   }
 

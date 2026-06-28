@@ -1,8 +1,10 @@
 "use client";
 
+import useSWR from "swr";
 import type { ScheduleDay } from "@/lib/data";
-import { useApi } from "@/lib/useApi";
+import { fetcher } from "@/lib/fetcher";
 import { ArrowLeftIcon } from "./icons";
+import { CardSkeleton, Skeleton } from "./Skeleton";
 
 interface ScheduleData {
   schedule: ScheduleDay[];
@@ -16,9 +18,18 @@ const colorTokens: Record<string, string> = {
 };
 
 export function WeeklySchedule() {
-  const { data } = useApi<ScheduleData>("/api/schedule");
+  const { data } = useSWR<ScheduleData>("/api/schedule", fetcher);
   if (!data) {
-    return <section style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 220 }} />;
+    return (
+      <CardSkeleton minHeight={220}>
+        <Skeleton style={{ width: "35%", height: 14 }} />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 12 }}>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} style={{ width: "100%", height: 130 }} />
+          ))}
+        </div>
+      </CardSkeleton>
+    );
   }
   const { schedule } = data;
   return (

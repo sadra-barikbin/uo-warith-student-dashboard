@@ -1,17 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import useSWR from "swr";
 import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
 import { Hero } from "@/components/Hero";
 import { AIAdvisorCard } from "@/components/AIAdvisorCard";
-import { GpaTrendChart } from "@/components/GpaTrendChart";
-import { PercentileGauge } from "@/components/PercentileGauge";
-import { CoursesCard } from "@/components/CoursesCard";
-import { GradeDistributionCard } from "@/components/GradeDistributionCard";
-import { WeeklySchedule } from "@/components/WeeklySchedule";
 import { AnnouncementsCard } from "@/components/AnnouncementsCard";
-import { useApi } from "@/lib/useApi";
+import { fetcher } from "@/lib/fetcher";
 import type { Announcement } from "@/lib/data";
 
 interface AnnouncementsData {
@@ -20,13 +15,13 @@ interface AnnouncementsData {
 }
 
 export default function OverviewPage() {
-  const { data, setData } = useAnnouncements();
+  const { data, mutate } = useSWR<AnnouncementsData>("/api/announcements", fetcher);
 
   const markRead = async (id: string) => {
     const res = await fetch(`/api/announcements/${id}/read`, { method: "POST" });
     if (!res.ok) return;
     const updated: AnnouncementsData = await res.json();
-    setData(updated);
+    mutate(updated);
   };
 
   return (
@@ -48,26 +43,8 @@ export default function OverviewPage() {
         <Hero />
         <AIAdvisorCard />
 
-        <section data-grid style={{ display: "grid", gridTemplateColumns: "minmax(0,2fr) minmax(0,1fr)", gap: 20 }}>
-          <GpaTrendChart />
-          <PercentileGauge />
-        </section>
-
-        <section data-grid style={{ display: "grid", gridTemplateColumns: "minmax(0,2fr) minmax(0,1fr)", gap: 20 }}>
-          <CoursesCard />
-          <GradeDistributionCard />
-        </section>
-
-        <WeeklySchedule />
-
         {data && <AnnouncementsCard announcements={data.announcements} onMarkRead={markRead} />}
       </main>
     </div>
   );
-}
-
-function useAnnouncements() {
-  const { data: fetched } = useApi<AnnouncementsData>("/api/announcements");
-  const [override, setOverride] = useState<AnnouncementsData | null>(null);
-  return { data: override ?? fetched, setData: setOverride };
 }

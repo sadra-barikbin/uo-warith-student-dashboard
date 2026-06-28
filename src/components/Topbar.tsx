@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { useTheme } from "./ThemeProvider";
+import { useSidebar } from "./SidebarProvider";
 import { student } from "@/lib/data";
-import { SunIcon, MoonIcon, ChevronDownIcon, SearchIcon, BellIcon } from "./icons";
+import { SunIcon, MoonIcon, BellIcon, MenuIcon } from "./icons";
 
 const controlStyle: React.CSSProperties = {
   width: 40,
@@ -18,12 +18,9 @@ const controlStyle: React.CSSProperties = {
   cursor: "pointer",
 };
 
-const TERMS = ["الفصل الثاني 2026", "الفصل الأول 2025"];
-
 export function Topbar({ title, dateLine, unread }: { title: string; dateLine: string; unread: number }) {
   const { theme, toggleTheme } = useTheme();
-  const [term, setTerm] = useState(TERMS[0]);
-  const [termOpen, setTermOpen] = useState(false);
+  const { toggle: toggleSidebar } = useSidebar();
 
   return (
     <header
@@ -35,79 +32,23 @@ export function Topbar({ title, dateLine, unread }: { title: string; dateLine: s
         flexWrap: "wrap",
       }}
     >
-      <div>
-        <div style={{ fontWeight: 700, fontSize: 22 }}>{title}</div>
-        <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 2 }}>{dateLine}</div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <button
+          data-menu-btn
+          onClick={toggleSidebar}
+          title="القائمة"
+          style={{ ...controlStyle, display: undefined, border: "1px solid var(--bd-3)" }}
+        >
+          <MenuIcon />
+        </button>
+        <div>
+          <div style={{ fontWeight: 700, fontSize: 22 }}>{title}</div>
+          <div style={{ fontSize: 13, color: "var(--muted)", marginTop: 2 }}>{dateLine}</div>
+        </div>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <button onClick={toggleTheme} title="تبديل المظهر" style={{ ...controlStyle, border: "1px solid var(--bd-3)" }}>
           {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-        </button>
-
-        <div style={{ position: "relative" }}>
-          <button
-            onClick={() => setTermOpen((o) => !o)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "9px 14px",
-              borderRadius: 10,
-              border: "1px solid var(--bd-3)",
-              background: "var(--ov)",
-              fontSize: 13,
-              color: "var(--muted-s)",
-              cursor: "pointer",
-              fontFamily: "var(--font-plex-arabic), sans-serif",
-            }}
-          >
-            {term}
-            <ChevronDownIcon />
-          </button>
-          {termOpen && (
-            <div
-              style={{
-                position: "absolute",
-                top: "calc(100% + 6px)",
-                insetInlineEnd: 0,
-                background: "var(--surface)",
-                border: "1px solid var(--bd)",
-                borderRadius: 10,
-                boxShadow: "var(--card-shadow)",
-                zIndex: 10,
-                minWidth: 180,
-                overflow: "hidden",
-              }}
-            >
-              {TERMS.map((t) => (
-                <button
-                  key={t}
-                  onClick={() => {
-                    setTerm(t);
-                    setTermOpen(false);
-                  }}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    textAlign: "start",
-                    padding: "10px 14px",
-                    fontSize: 13,
-                    background: t === term ? "var(--accent-12)" : "transparent",
-                    color: t === term ? "var(--text-strong)" : "var(--muted-s)",
-                    border: "none",
-                    cursor: "pointer",
-                    fontFamily: "var(--font-plex-arabic), sans-serif",
-                  }}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <button style={controlStyle} title="بحث">
-          <SearchIcon />
         </button>
 
         <button style={{ ...controlStyle, position: "relative" }} title="الإشعارات">

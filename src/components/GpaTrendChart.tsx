@@ -1,6 +1,8 @@
 "use client";
 
-import { useApi } from "@/lib/useApi";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import { CardSkeleton, Skeleton } from "./Skeleton";
 
 interface GpaTrendData {
   series: { term: string; gpa: number }[];
@@ -21,8 +23,17 @@ function yFor(gpa: number) {
 }
 
 export function GpaTrendChart() {
-  const { data } = useApi<GpaTrendData>("/api/gpa-trend");
-  if (!data) return <div style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 244 }} />;
+  const { data } = useSWR<GpaTrendData>("/api/gpa-trend", fetcher);
+  if (!data)
+    return (
+      <CardSkeleton minHeight={244}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Skeleton style={{ width: "40%", height: 14 }} />
+          <Skeleton style={{ width: 80, height: 24 }} />
+        </div>
+        <Skeleton style={{ flex: 1, width: "100%" }} />
+      </CardSkeleton>
+    );
   const gpaSeries = data.series;
   const points = gpaSeries.map((d, i) => ({
     term: d.term,
