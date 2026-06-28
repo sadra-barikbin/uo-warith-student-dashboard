@@ -1,5 +1,12 @@
-import { schedule } from "@/lib/data";
+"use client";
+
+import type { ScheduleDay } from "@/lib/data";
+import { useApi } from "@/lib/useApi";
 import { ArrowLeftIcon } from "./icons";
+
+interface ScheduleData {
+  schedule: ScheduleDay[];
+}
 
 const colorTokens: Record<string, string> = {
   pos: "var(--pos)",
@@ -9,6 +16,11 @@ const colorTokens: Record<string, string> = {
 };
 
 export function WeeklySchedule() {
+  const { data } = useApi<ScheduleData>("/api/schedule");
+  if (!data) {
+    return <section style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 220 }} />;
+  }
+  const { schedule } = data;
   return (
     <section style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", padding: 22 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>

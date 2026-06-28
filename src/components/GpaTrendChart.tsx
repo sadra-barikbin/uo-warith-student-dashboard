@@ -1,4 +1,10 @@
-import { gpaSeries } from "@/lib/data";
+"use client";
+
+import { useApi } from "@/lib/useApi";
+
+interface GpaTrendData {
+  series: { term: string; gpa: number }[];
+}
 
 const X0 = 46;
 const X1 = 524;
@@ -7,18 +13,21 @@ const Y1 = 160;
 const MIN = 3.3;
 const MAX = 3.9;
 
-function xFor(i: number) {
-  return X1 - ((X1 - X0) * i) / (gpaSeries.length - 1);
+function xFor(i: number, length: number) {
+  return X1 - ((X1 - X0) * i) / (length - 1);
 }
 function yFor(gpa: number) {
   return Y1 - ((gpa - MIN) / (MAX - MIN)) * (Y1 - Y0);
 }
 
 export function GpaTrendChart() {
+  const { data } = useApi<GpaTrendData>("/api/gpa-trend");
+  if (!data) return <div style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 244 }} />;
+  const gpaSeries = data.series;
   const points = gpaSeries.map((d, i) => ({
     term: d.term,
     gpa: d.gpa.toFixed(2),
-    cx: +xFor(i).toFixed(1),
+    cx: +xFor(i, gpaSeries.length).toFixed(1),
     cy: +yFor(d.gpa).toFixed(1),
     last: i === gpaSeries.length - 1,
   }));

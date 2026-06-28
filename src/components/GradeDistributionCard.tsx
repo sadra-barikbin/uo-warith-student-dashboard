@@ -1,6 +1,15 @@
-import { gradeDistribution } from "@/lib/data";
+"use client";
+
+import { useApi } from "@/lib/useApi";
+
+interface GradeDistributionData {
+  distribution: { label: string; count: number; you?: boolean }[];
+}
 
 export function GradeDistributionCard() {
+  const { data } = useApi<GradeDistributionData>("/api/grade-distribution");
+  if (!data) return <div style={{ borderRadius: 18, border: "1px solid var(--bd)", boxShadow: "var(--card-shadow)", background: "var(--surface)", minHeight: 260 }} />;
+  const gradeDistribution = data.distribution;
   const maxN = Math.max(...gradeDistribution.map((d) => d.count));
   const bars = gradeDistribution.map((d) => ({
     label: d.label,
